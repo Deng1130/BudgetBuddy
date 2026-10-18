@@ -16,7 +16,7 @@ import { RecurringBill, RecurringBillInstance, BillFrequency, ExpenseCategory } 
 /**
  * Zod validation schema for Recurring Bill.
  */
-export const recurringBillSchema = z.object({
+const recurringBillSchema = z.object({
   title: z
     .string()
     .trim()
@@ -74,9 +74,7 @@ export const recurringBillSchema = z.object({
     .transform((val) => (val && val.trim().length > 0 ? val.trim() : null)),
 });
 
-export type RecurringBillFormValues = z.infer<typeof recurringBillSchema>;
-
-export interface ActionResponse<T = unknown> {
+interface ActionResponse<T = unknown> {
   success: boolean;
   error?: string;
   fieldErrors?: Record<string, string[]>;

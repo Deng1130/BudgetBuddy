@@ -4,7 +4,7 @@ import React from "react";
 import { BottomTabBar } from "./bottom-tab-bar";
 import { SideRail } from "./side-rail";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,18 +17,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       
       {/* Main content area */}
       <main className="flex-1 md:pl-20 pb-24 md:pb-0 w-full overflow-x-hidden relative">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={pathname}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="min-h-full"
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="min-h-full"
+        >
+          {children}
+        </motion.div>
       </main>
     </div>
   );
