@@ -39,14 +39,18 @@ export function ExpensesView({
 
   // Filtered expense computation
   const filteredExpenses = useMemo(() => {
-    return initialExpenses.filter((item) => {
+    return (initialExpenses || []).filter((item) => {
+      if (!item) return false;
+
       // 1. Category Filter
       if (selectedCategory !== 'all' && item.category !== selectedCategory) {
         return false;
       }
 
       // 2. Date Range Filter
-      const [year, month, day] = item.expense_date.split('-').map(Number);
+      if (!item.expense_date) return true;
+      const [year, month, day] = String(item.expense_date).split('-').map(Number);
+      if (!year || !month || !day) return true;
       const itemDate = new Date(year, month - 1, day);
 
       if (dateRange === 'this_month') {

@@ -34,7 +34,7 @@ export function ExpenseCard({ expense, onEdit, onDelete }: ExpenseCardProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [swipeOffset, setSwipeOffset] = useState(0);
 
-  const categoryMeta = CATEGORIES[expense.category] || CATEGORIES.other;
+  const categoryMeta = (expense?.category && CATEGORIES[expense.category]) || CATEGORIES.other;
   const CategoryIcon = categoryMeta.icon;
 
   const handleDelete = async () => {
@@ -224,7 +224,7 @@ export function ExpenseCard({ expense, onEdit, onDelete }: ExpenseCardProps) {
                   <div className="flex flex-wrap items-center justify-between text-xs text-text-muted pt-2 border-t border-border/30 gap-2">
                     <div className="flex items-center gap-4">
                       <span>Category: <strong className="text-text-secondary font-medium">{categoryMeta.label}</strong></span>
-                      <span>Recorded: {formatExpenseDate(expense.created_at.slice(0, 10))}</span>
+                      <span>Recorded: {expense.created_at ? formatExpenseDate(expense.created_at.slice(0, 10)) : formatExpenseDate(expense.expense_date)}</span>
                     </div>
 
                     {/* Mobile visible action buttons inside expanded view */}

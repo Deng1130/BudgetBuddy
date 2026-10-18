@@ -18,7 +18,10 @@ export function BottomTabBar() {
     <div className="md:hidden fixed bottom-6 left-6 right-6 z-50">
       <nav className="flex items-center justify-around bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-3 shadow-lg shadow-shadow">
         {NAV_ITEMS.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive =
+            item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
               key={item.name}

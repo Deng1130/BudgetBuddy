@@ -24,7 +24,10 @@ export function SideRail() {
       
       <nav className="flex flex-col items-center gap-6 flex-1">
         {NAV_ITEMS.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive =
+            item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <div key={item.name} className="relative group">
               <Link

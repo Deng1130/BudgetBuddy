@@ -14,7 +14,7 @@ import { ExpenseCategory, Expense } from '@/types/database';
  * - expense_date: valid date string (YYYY-MM-DD)
  * - notes: optional, max 500 characters
  */
-export const expenseSchema = z.object({
+const expenseSchema = z.object({
   title: z
     .string()
     .trim()
@@ -57,9 +57,7 @@ export const expenseSchema = z.object({
     .transform((val) => (val && val.trim().length > 0 ? val.trim() : null)),
 });
 
-export type ExpenseFormValues = z.infer<typeof expenseSchema>;
-
-export interface ActionResponse<T = unknown> {
+interface ActionResponse<T = unknown> {
   success: boolean;
   error?: string;
   fieldErrors?: Record<string, string[]>;
