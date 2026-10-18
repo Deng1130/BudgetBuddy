@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { Expense } from '@/types/database';
 
 /**
  * Zod validation schema for Expense input.
