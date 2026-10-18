@@ -16,8 +16,9 @@ export async function signInWithEmail(formData: FormData) {
   if (error) {
     return { error: error.message };
   }
-  
-  redirect("/dashboard");
+
+  // Return success — client will handle navigation
+  return { success: true };
 }
 
 export async function signUpWithEmail(formData: FormData) {
@@ -37,8 +38,8 @@ export async function signUpWithEmail(formData: FormData) {
     return { error: error.message };
   }
 
-  // Assuming auto-confirm for now or they just sign in
-  redirect("/dashboard");
+  // Return success — client will handle navigation
+  return { success: true };
 }
 
 export async function signOut() {

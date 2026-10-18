@@ -1,11 +1,12 @@
 'use server';
 
-import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createExpense, updateExpense, deleteExpense } from '@/lib/data/expenses';
 import { getUser } from '@/lib/auth';
 import { ExpenseCategory, Expense } from '@/types/database';
+import { expenseSchema, ActionResponse } from '@/lib/validations/expense';
 
+<<<<<<< HEAD
 /**
  * Zod validation schema for Expense input.
  * - title: required, 1-100 characters
@@ -63,6 +64,10 @@ interface ActionResponse<T = unknown> {
   fieldErrors?: Record<string, string[]>;
   data?: T;
 }
+=======
+// Re-export types for consumers that import from this file
+export type { ExpenseFormValues, ActionResponse } from '@/lib/validations/expense';
+>>>>>>> 3a9704334821e8bd9e3ab1d08eb05eff838ce531
 
 /**
  * Server action to validate and add a new expense.

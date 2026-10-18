@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { signInWithEmail, signUpWithEmail } from "./actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Wallet, Mail, Lock, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +45,9 @@ export default function LoginPage() {
       const res = await action(formData);
       if (res?.error) {
         setError(res.error);
+      } else if (res?.success) {
+        router.push("/dashboard");
+        return; // keep isLoading=true so button stays disabled during navigation
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "An unexpected error occurred";

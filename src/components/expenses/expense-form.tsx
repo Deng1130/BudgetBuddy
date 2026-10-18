@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,12 @@ function ExpenseFormSheet({
   initialData,
   onSuccess,
 }: ExpenseFormSheetProps) {
-  const router = useRouter();
+  // Guard against setState calls after the modal has been unmounted by AnimatePresence
+  const isMounted = useRef(true);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => { isMounted.current = false; };
+  }, []);
 
   // Form field state directly initialized from props (no useEffect setState needed!)
   const [title, setTitle] = useState(initialData?.title || '');
@@ -106,21 +110,26 @@ function ExpenseFormSheet({
 
       // Success feedback
       setShowSuccessToast(true);
-      router.refresh();
       if (onSuccess && res.data) {
         onSuccess(res.data);
       }
 
-      // Briefly display success feedback before auto-closing
-      setTimeout(() => {
+      // Briefly display success feedback before auto-closing.
+      // Guard with isMounted ref so we don't setState on an unmounted component
+      // (AnimatePresence may remove this component before the timer fires).
+      const timer = setTimeout(() => {
+        if (!isMounted.current) return;
         setIsSubmitting(false);
         setShowSuccessToast(false);
         onClose();
       }, 700);
+      return () => clearTimeout(timer);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Something went wrong';
-      setGeneralError(msg);
-      setIsSubmitting(false);
+      if (isMounted.current) {
+        setGeneralError(msg);
+        setIsSubmitting(false);
+      }
     }
   };
 
