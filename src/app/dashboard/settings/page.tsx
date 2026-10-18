@@ -48,7 +48,7 @@ export default function SettingsPage() {
                 <p className="text-sm text-text-muted">Choose your brand color</p>
               </div>
               <div className="flex flex-wrap gap-4">
-                {(Object.entries(ACCENT_COLORS) as [AccentName, any][]).map(([name, palette]) => {
+                {(Object.entries(ACCENT_COLORS) as [AccentName, (typeof ACCENT_COLORS)[AccentName]][]).map(([name, palette]) => {
                   const isActive = accent === name;
                   return (
                     <button

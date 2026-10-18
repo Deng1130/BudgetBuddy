@@ -44,8 +44,9 @@ export default function LoginPage() {
       if (res?.error) {
         setError(res.error);
       }
-    } catch (err: any) {
-      setError(err.message || "An unexpected error occurred");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(message);
     } finally {
       setIsLoading(false);
     }
