@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useSyncExternalStore } from 'react';
 import { ACCENT_COLORS, AccentName } from './colors';
 
 type ThemeMode = 'light' | 'dark';
@@ -14,30 +14,23 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>('light');
-  const [accent, setAccentState] = useState<AccentName>('emerald');
-  const [mounted, setMounted] = useState(false);
+const emptySubscribe = () => () => {};
 
-  useEffect(() => {
-    // Mount phase
-    setMounted(true);
-    
-    // Load persisted state
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+
+  const [mode, setModeState] = useState<ThemeMode>(() => {
+    if (typeof window === 'undefined') return 'light';
     const savedMode = localStorage.getItem('budgetbuddy-theme-mode') as ThemeMode;
+    if (savedMode) return savedMode;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  const [accent, setAccentState] = useState<AccentName>(() => {
+    if (typeof window === 'undefined') return 'emerald';
     const savedAccent = localStorage.getItem('budgetbuddy-accent') as AccentName;
-    
-    if (savedMode) {
-      setModeState(savedMode);
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setModeState(prefersDark ? 'dark' : 'light');
-    }
-    
-    if (savedAccent && Object.keys(ACCENT_COLORS).includes(savedAccent)) {
-      setAccentState(savedAccent);
-    }
-  }, []);
+    return savedAccent && Object.keys(ACCENT_COLORS).includes(savedAccent) ? savedAccent : 'emerald';
+  });
 
   // Update DOM when mode/accent changes
   useEffect(() => {
@@ -66,14 +59,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setAccentState(name);
   };
 
-  // Prevent flash of unstyled content
-  if (!mounted) {
-    return <div style={{ visibility: 'hidden' }}>{children}</div>;
-  }
-
   return (
     <ThemeContext.Provider value={{ mode, accent, toggleMode, setAccent }}>
-      {children}
+      {/* Hide children until client has hydrated to prevent flash of unstyled content */}
+      <div style={{ visibility: mounted ? 'visible' : 'hidden' }}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }
