@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Wallet, Mail, Lock, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/nav/theme-toggle";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -58,8 +59,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-bg-secondary selection:bg-accent-500/30">
-      
+    <div className="min-h-screen flex flex-col justify-center items-center p-4 bg-bg-secondary selection:bg-accent-500/30 relative">
+      {/* Theme Mode Switch at Upper Right */}
+      <div className="fixed top-4 right-4 md:top-6 md:right-8 z-40">
+        <ThemeToggle />
+      </div>
+
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-3">
         <div className="w-14 h-14 bg-accent-500 rounded-2xl flex items-center justify-center shadow-lg shadow-accent-500/30 text-white animate-bounce-subtle">
